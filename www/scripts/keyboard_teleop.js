@@ -46,13 +46,13 @@ KEYBOARDTELEOP.Teleop = function(options) {
 
   // sends connection messages to the console
   ros.on('connection', function() {
-    console.log('Connected to websocket server.');
+    console.log('Teleop connected to websocket server.');
   });
   ros.on('error', function(error) {
-    console.log('Error connecting to websocket server: ', error);
+    console.log('Teleop error connecting to websocket server: ', error);
   });
   ros.on('close', function() {
-    console.log('Connection to websocket server closed.');
+    console.log('Teleop connection to websocket server closed.');
   });
 
   // sets up a key listener on the page used for keyboard teleoperation

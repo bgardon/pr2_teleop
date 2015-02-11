@@ -2,7 +2,7 @@
     <group ns="pr2_teleop">
     	<node pkg="mjpeg_server" type="mjpeg_server" name="mjpeg_server" />
     	<node pkg="pr2_tuck_arms_action" type="tuck_arms.py" name="tuck_arms"/> 
-    	<node pkg="teleop_web_app" type="arm_state.py" name="get_arm_state" output="screen" />
-    	<node pkg="teleop_web_app" type="point_forearms_down.py" name="point_arms" output="screen" />
+    	<node pkg="pr2_teleop" type="arm_state.py" name="get_arm_state" output="screen" />
+    	<node pkg="pr2_teleop" type="point_forearms_down.py" name="point_arms" output="screen" />
     </group>
 </launch>
