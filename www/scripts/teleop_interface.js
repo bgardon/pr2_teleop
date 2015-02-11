@@ -1,8 +1,9 @@
-var currentEnv = 'robomackerel'
+var websocket_url;
+$.get('/get_websocket_url', function(data, status) {websocket_url = data});
 
-// Connection to ROS - Uses port 9090 by default
+
 var ros = new ROSLIB.Ros({
-    url : 'ws://' + currentEnv + '.cs.washington.edu:9090'
+    url : websocket_url
 });
 
 
@@ -141,9 +142,13 @@ function updateInterface(left, right) {
 
 // Start the camera feeds
 function init() {
+    var parser = document.createElement('a');
+    parser.href = websocket_url;
+    var hostname  = parser.hostname;
+
     var viewer_right = new MJPEGCANVAS.Viewer({
 	divID : 'mjpeg_right',
-	host : currentEnv + '.cs.washington.edu',
+	host : hostname,
 	width : 320,
 	height : 240,
 	topic : '/r_forearm_cam/image_color'
@@ -151,7 +156,7 @@ function init() {
 
     var viewer_left = new MJPEGCANVAS.Viewer({
 	divID : 'mjpeg_left',
-	host : currentEnv + '.cs.washington.edu',
+	host : hostname,
 	width : 320,
 	height : 240,
 	topic : '/l_forearm_cam/image_color'
@@ -159,7 +164,7 @@ function init() {
 
     var viewer_main = new MJPEGCANVAS.Viewer({
 	divID : 'mjpeg_main',
-	host : currentEnv + '.cs.washington.edu',
+	host : hostname,
 	width : 640,
 	height : 480,
 	topic : '/wide_stereo/left/image_color'

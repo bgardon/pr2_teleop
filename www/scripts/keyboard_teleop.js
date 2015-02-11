@@ -79,6 +79,11 @@ KEYBOARDTELEOP.Teleop = function(options) {
         z = 1 * speed;
         break;
       case 87: //W key : up
+        if (keyDown) {
+          alert("down");
+        } else {
+          alert("up");
+        }
         x = 0.5 * speed;
         break;
       case 38: //up arrow : up
@@ -187,6 +192,64 @@ KEYBOARDTELEOP.Teleop = function(options) {
   }, false);
   body.addEventListener('keyup', function(e) {
     handleKey(e.keyCode, false);
+  }, false);
+
+  //Getting around
+  document.getElementById("MoveForward").addEventListener('mousedown', function(e) {
+    handleKey(87, true);
+  }, false);
+  document.getElementById("MoveForward").addEventListener('mouseup', function(e) {
+    handleKey(87, false);
+  }, false);
+
+  document.getElementById("MoveBack").addEventListener('mousedown', function(e) {
+    handleKey(83, true);
+  }, false);
+  document.getElementById("MoveBack").addEventListener('mouseup', function(e) {
+    handleKey(83, false);
+  }, false);
+
+  document.getElementById("MoveLeft").addEventListener('mousedown', function(e) {
+    handleKey(65, true);
+  }, false);
+  document.getElementById("MoveLeft").addEventListener('mouseup', function(e) {
+    handleKey(65, false);
+  }, false);
+
+  document.getElementById("MoveRight").addEventListener('mousedown', function(e) {
+    handleKey(68, true);
+  }, false);
+  document.getElementById("MoveRight").addEventListener('mouseup', function(e) {
+    handleKey(68, false);
+  }, false);
+
+  // Looking around
+  document.getElementById("LookUp").addEventListener('mousedown', function(e) {
+    handleKey(73, true);
+  }, false);
+  document.getElementById("LookUp").addEventListener('mouseup', function(e) {
+    handleKey(73, false);
+  }, false);
+
+  document.getElementById("LookDown").addEventListener('mousedown', function(e) {
+    handleKey(75, true);
+  }, false);
+  document.getElementById("LookDown").addEventListener('mouseup', function(e) {
+    handleKey(75, false);
+  }, false);
+
+  document.getElementById("LookLeft").addEventListener('mousedown', function(e) {
+    handleKey(74, true);
+  }, false);
+  document.getElementById("LookLeft").addEventListener('mouseup', function(e) {
+    handleKey(74, false);
+  }, false);
+
+  document.getElementById("LookRight").addEventListener('mousedown', function(e) {
+    handleKey(76, true);
+  }, false);
+  document.getElementById("LookRight").addEventListener('mouseup', function(e) {
+    handleKey(76, false);
   }, false);
 };
 

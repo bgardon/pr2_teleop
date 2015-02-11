@@ -16,6 +16,9 @@
     <link rel="import" href="./bower_components/core-animated-pages/core-animated-pages.html">
     <link rel="import" href="./bower_components/core-animated-pages/transitions/cross-fade.html">
 
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+
     <!--Load the Robot Web Tools scripts-->
     <script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
     <script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.js"></script>
@@ -23,16 +26,29 @@
 
     <!--Load the app logic for this web app-->
     <script type="text/javascript" src="./scripts/keyboard_teleop.js"></script>
-    <script type="text/javascript" src="./scripts/forearm_webcam.js"></script>
+    <script type="text/javascript" src="./scripts/teleop_interface.js"></script>
   </head>
 
   <body unresolved onload="init()">
     <section>
       <div id="streams">
-      	<h1>Rosie's View</h1>
       	<div id="mjpeg_main"></div>
       	<div id="mjpeg_left"></div>
       	<div id="mjpeg_right"></div>
+        <div id="movement_buttons">
+          <div id="base_buttons">
+            <paper-button id="MoveForward" raised class="colored teleop_button">Move Forward</paper-button> <br />
+            <paper-button id="MoveBack" raised class="colored teleop_button">Move Backward</paper-button> <br />
+            <paper-button id="MoveLeft" raised class="colored teleop_button">Move Left</paper-button> <br />
+            <paper-button id="MoveRight" raised class="colored teleop_button">Move Right</paper-button>
+          </div>
+          <div id="look_buttons">
+            <paper-button id="LookUp" raised class="colored teleop_button">Look Up</paper-button> <br />
+            <paper-button id="LookDown" raised class="colored teleop_button">Look Down</paper-button> <br />
+            <paper-button id="LookLeft" raised class="colored teleop_button">Look Left</paper-button> <br />
+            <paper-button id="LookRight" raised class="colored teleop_button">Look Right</paper-button>
+          </div>
+        </div>
       </div>
       <div id="buttons" layout vertical>
       	<h2>Arm Controls</h2>
