@@ -1,0 +1,7 @@
+#goal definition
+---
+#result definition
+int32 l_arm_state
+int32 r_arm_state
+---
+#feedback

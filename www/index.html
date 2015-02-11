@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+
+    <!--Load primary styles-->
+    <link rel="stylesheet" type="text/css" href="./css/styles.css">
+
+    <!--Load Polymer Elements and the polymer platform library-->
+    <script src="./bower_components/platform/platform.js"></script>
+    <link rel="import" href="./bower_components/font-roboto/roboto.html">
+    <link rel="import" href="./bower_components/paper-button/paper-button.html">
+    <link rel="import" href="./bower_components/paper-checkbox/paper-checkbox.html">
+    <link rel="import" href="./bower_components/paper-toast/paper-toast.html">
+    <link rel="import" href="./bower_components/paper-tabs/paper-tabs.html">
+    <link rel="import" href="./bower_components/core-animated-pages/core-animated-pages.html">
+    <link rel="import" href="./bower_components/core-animated-pages/transitions/cross-fade.html">
+
+    <!--Load the Robot Web Tools scripts-->
+    <script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.js"></script>
+    <script type="text/javascript" src="http://cdn.robotwebtools.org/mjpegcanvasjs/current/mjpegcanvas.min.js"></script>
+
+    <!--Load the app logic for this web app-->
+    <script type="text/javascript" src="./scripts/keyboard_teleop.js"></script>
+    <script type="text/javascript" src="./scripts/forearm_webcam.js"></script>
+  </head>
+
+  <body unresolved onload="init()">
+    <section>
+      <div id="streams">
+      	<h1>Rosie's View</h1>
+      	<div id="mjpeg_main"></div>
+      	<div id="mjpeg_left"></div>
+      	<div id="mjpeg_right"></div>
+      </div>
+      <div id="buttons" layout vertical>
+      	<h2>Arm Controls</h2>
+      	<paper-button id="toggleBtn" raised class="colored" onclick="toggleArms()">Tuck Arms</paper-button>
+      	<paper-button id="PointArmsBtn" raised class="colored" onclick="pointArms()">Point Arms</paper-button>
+      	<paper-checkbox id="tightCb" label="Tight Configuration" onclick="updateArmState()"></paper-checkbox>
+
+      	<h2>Teleop Instructions</h2>
+      	<paper-tabs id="tabs" selected="0" class="transparent-teal">
+      	  <paper-tab>Moving</paper-tab>
+      	  <paper-tab>Looking</paper-tab>
+      	</paper-tabs>
+      	<core-animated-pages transitions="cross-fade" selected="0">
+      	  <section id="page1">
+      	    <div cross-fade>
+              <span class="key">W / Up</span>
+      	      <span class="instr">Move Forward</span> <br />
+              <span class="key">S / Down</span>
+      	      <span class="instr">Move Backward</span> <br />
+              <span class="key">A / Left</span>
+      	      <span class="instr">Strafe Left</span> <br />
+              <span class="key">D / Right</span>
+      	      <span class="instr">Strafe Right</span> <br />
+              <span class="key">Q</span>
+      	      <span class="instr">Rotate Left</span> <br />
+              <span class="key">E</span>
+      	      <span class="instr">Rotate Right</span> <br />
+      	    </div>
+      	  </section>
+      	  <section id="page2">
+      	    <div cross-fade>
+              <span class="key">I</span>
+              <span class="instr">Look Up</span> <br />
+              <span class="key">K</span>
+      	      <span class="instr">Look Down</span> <br />
+              <span class="key">J</span>
+              <span class="instr">Look Reft</span> <br />
+              <span class="key">L</span>
+      	      <span class="instr">Look Right</span> <br />
+      	    </div>
+      	  </section>
+      	</core-animated-pages>
+      </div>
+    </section>
+
+    <paper-toast id="untucked" text="Rosie's arms are untucking"></paper-toast>
+    <paper-toast id="tucked" text="Rosie's arms are tucking"></paper-toast>
+    <paper-toast id="pointed" text="Rosie's arms are pointing down - normal"></paper-toast>
+    <paper-toast id="pointed_t" text="Rosie's arms are pointing down - tight"></paper-toast>
+
+    <script>
+      var tabs = document.querySelector('paper-tabs');
+      var pages = document.querySelector('core-animated-pages');
+
+      tabs.addEventListener('core-select', function() {
+        pages.selected = tabs.selected;
+      });
+    </script>
+  </body>
+
+</html>

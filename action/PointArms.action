@@ -1,0 +1,9 @@
+#goal definition
+bool point_left
+bool point_right
+bool tight
+---
+#result definition
+bool success
+---
+#feedback

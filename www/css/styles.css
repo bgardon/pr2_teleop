@@ -1,0 +1,91 @@
+body {
+    font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
+    margin: 0;
+    padding: 24px;
+}
+
+section {
+    padding: 20px 5px;
+}
+
+#streams {
+    float: left;
+}
+
+#buttons {
+    padding-left: 10px;
+}
+
+#mjpeg_main {
+    margin_left: 5px;
+}
+
+#mjpeg_left {
+    float: left;
+    margin-right: 0px;
+}
+
+paper-button {
+    width: 225px;
+    margin-bottom: 10px;
+}
+
+paper-button.colored {
+    color: #;
+}
+
+paper-button[raised].colored {
+    background: #4285f4;
+    color: #fff;
+}
+
+paper-checkbox {
+    margin: 5px;
+}
+
+paper-tabs {
+    background-color: #4285f4;
+    color: #fff;
+    box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.2);
+}
+
+paper-tabs.transparent-teal {
+    background-color: transparent;
+    color: #4285f4;
+    box-shadow: none;
+    width: 250px;
+}
+
+paper-tabs.transparent-teal::shadow #selectionBar {
+    background-color: #4285f4;
+}
+
+paper-tabs.transparent-teal paper-tab::shadow #ink {
+    color: #4285f4;
+}
+
+core-pages-animated transitions {
+    width: 100%; 
+    height: 100%;
+}
+
+.key {
+    display: block;
+    float: left;
+    width: 75px;
+}
+
+.instr {
+    display: block;
+    float: left;
+    margin-left: 20px;
+}
+
+.sep {
+    display: block;
+    float: left;
+}
+
+#buttons h2:nth-of-type(2) { 
+    padding-top: 50px;
+}
