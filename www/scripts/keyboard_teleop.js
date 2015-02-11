@@ -80,9 +80,9 @@ KEYBOARDTELEOP.Teleop = function(options) {
         break;
       case 87: //W key : up
         if (keyDown) {
-          alert("down");
+          console.log("down");
         } else {
-          alert("up");
+          console.log("up");
         }
         x = 0.5 * speed;
         break;

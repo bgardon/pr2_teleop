@@ -10,4 +10,4 @@ To start this app, run
 
 If you are running in simulation, you should first start Gazebo before launching this app.
 
-For any questions, email: fiannaca@cs.uw.edu
+For any questions, email: bgardon@.uw.edu

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>teleop_web_app</name>
+  <name>pr2_teleop</name>
   <version>0.0.0</version>
   <description>The teleop_web_app package</description>
 
