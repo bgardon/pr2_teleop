@@ -19,8 +19,6 @@ KEYBOARDTELEOP.Teleop = function(options) {
   options = options || {};
   var ros = options.ros;
   var topic = options.topic || '/cmd_vel';
-  // permanent throttle
-  var throttle = options.throttle || 1.0;
 
   // linear x and y movement and angular z movement
   var x = 0;
@@ -66,82 +64,66 @@ KEYBOARDTELEOP.Teleop = function(options) {
     var old_point_hor_angle = point_hor_angle;
     var old_point_vert_angle = point_vert_angle;
 
-    var speed = 0;
+    var speed = keyDown ? 1 : 0;
+    // check which key was pressed
+    switch (keyCode) {
+      // case 81: //Q key : turn left
+      //   z = 1 * speed;
+      //   break;
+      // case 87: //W key : up
+      //   x = 0.5 * speed;
+      //   break;
+      // case 38: //up arrow : up
+      //   x = 0.5 * speed;
+      //   break;
+      // case 69: //E key : turn right
+      //   z = -1 * speed;
+      //   break;
+      // case 83: //S key : down
+      //   x = -0.5 * speed;
+      //   break;
+      // case 40: //down arrow : down
+      //   x = -0.5 * speed;
+      //   break;
+      // case 68: //D key : strafe right
+      //   y = -0.5 * speed;
+      //   break;
+      // case 39: //right arrow : strafe right
+      //   y = -0.5 * speed;
+      //   break;
+      // case 65: //A key : strafe left
+      //   y = 0.5 * speed;
+      //   break;
+      // case 37: //left arrow : strafe left
+      //   y = 0.5 * speed;
+      //   break;
 
-    // throttle the speed by the slider and throttle constant
-    if (keyDown === true) {
-      // check which key was pressed
-      switch (keyCode) {
-        case 81: //Q key : turn left
-          z = 1;
-          break;
-        case 87: //W key : up
-          if (keyDown) {
-            console.log("down");
-          } else {
-            console.log("up");
-          }
-          x = 0.5;
-          break;
-        case 38: //up arrow : up
-          x = 0.5;
-          break;
-        case 69: //E key : turn right
-          z = -1;
-          break;
-        case 83: //S key : down
-          x = -0.5;
-          break;
-        case 40: //down arrow : down
-          x = -0.5;
-          break;
-        case 68: //D key : strafe right
-          y = -0.5;
-          break;
-        case 39: //right arrow : strafe right
-          y = -0.5;
-          break;
-        case 65: //A key : strafe left
-          y = 0.5;
-          break;
-        case 37: //left arrow : strafe left
-          y = 0.5;
-          break;
-
-        //Keys for head movement
-        case 73: //I key : look up
-          point_vert_angle += (Math.PI / 36);
-          if (point_vert_angle > Math.PI / 6) {
-            point_vert_angle = Math.PI / 6;
-          }
-          break;
-        case 74: //J key : look left
-          point_hor_angle += (Math.PI / 36);
-          if (point_hor_angle > Math.PI * 0.75) {
-            point_hor_angle = Math.PI * 0.75;
-          }
-          break;
-        case 75: //K key : look down
-          point_vert_angle -= (Math.PI / 36);
-          if (point_vert_angle < -Math.PI / 3) {
-            point_vert_angle = -Math.PI / 3;
-          }
-          break;
-        case 76: //L key : look right
-          point_hor_angle -= (Math.PI / 36);
-          if (point_hor_angle < -Math.PI * 0.75) {
-            point_hor_angle = -Math.PI * 0.75;
-          }
-          break;
+      // Keys for head movement
+      case 73: //I key : look up
+        point_vert_angle += (Math.PI / 36) * speed;
+        if (point_vert_angle > Math.PI / 6) {
+          point_vert_angle = Math.PI / 6;
         }
-      } else {
-        x = 0;
-        y = 0;
-        z = 0;
-
-        point_hor_angle = 0;
-        point_vert_angle = 0;
-      }
+        break;
+      case 74: //J key : look left
+        point_hor_angle += (Math.PI / 36) * speed;
+        if (point_hor_angle > Math.PI * 0.75) {
+          point_hor_angle = Math.PI * 0.75;
+        }
+        break;
+      case 75: //K key : look down
+        point_vert_angle -= (Math.PI / 36) * speed;
+        if (point_vert_angle < -Math.PI / 3) {
+          point_vert_angle = -Math.PI / 3;
+        }
+        break;
+      case 76: //L key : look right
+        point_hor_angle -= (Math.PI / 36) * speed;
+        if (point_hor_angle < -Math.PI * 0.75) {
+          point_hor_angle = -Math.PI * 0.75;
+        }
+        break;
+    }
 
     // publish a movement command
     var twist = new ROSLIB.Message({

@@ -23,9 +23,8 @@ $.get('/get_websocket_url', function(data, status) {
 	var arm_state_client = new ROSLIB.ActionClient({
 	    ros: ros,
 	    serverName: 'get_arm_state',
-	    actionName: 'teleop_web_app/GetArmStateAction'
+	    actionName: 'pr2_teleop/GetArmStateAction'
 	});
-
 
 	// Client for the TuckArmsAction Action Server
 	var tuck_client = new ROSLIB.ActionClient({
@@ -34,31 +33,37 @@ $.get('/get_websocket_url', function(data, status) {
 	    actionName: 'pr2_common_action_msgs/TuckArmsAction'
 	});
 
-
 	// Client for the PointArmsAction Action Server
 	var point_client = new ROSLIB.ActionClient({
 	    ros: ros,
 	    serverName: 'point_arms',
-	    actionName: 'teleop_web_app/PointArmsAction'
+	    actionName: 'pr2_teleop/PointArmsAction'
 	});
 
+	var head_controller = new ROSLIB.ActionClient({
+	    ros : ros,
+	    serverName : '/head_traj_controller/point_head_action',
+	    actionName : 'pr2_controllers_msgs/PointHeadAction' 
+	});
+
+	var movement_controller = new ROSLIB.Topic({
+    	ros : ros,
+    	name : '/base_controller/command',
+    	messageType : 'geometry_msgs/Twist'
+  	});
 
 	// Disables a polymer button
 	function disableBtn(btn) {
 	    btn.disabled = true;
 	    btn.className = "";
 	}
-
-
 	// Enables a polymer button
 	function enableBtn(btn) {
 	    btn.disabled = false;
 	    btn.className = "colored";
 	}
 
-
 	var ArmsTucked = false;
-
 
 	// Checks the current state of Rosie's arms and updates the interface to reflect this
 	function updateArmState() {
@@ -70,17 +75,16 @@ $.get('/get_websocket_url', function(data, status) {
 	    });
 
 	    goal.on('result', function(result) {
-		updateInterface(states[result.l_arm_state + 1], states[result.r_arm_state + 1])
+			updateInterface(states[result.l_arm_state + 1], states[result.r_arm_state + 1])
 
-		console.log('Arm State: ' 
-			    + states[result.l_arm_state+1] 
-			    + ', ' 
-			    + states[result.r_arm_state+1]);
+			console.log('Arm State: ' 
+				    + states[result.l_arm_state+1] 
+				    + ', ' 
+				    + states[result.r_arm_state+1]);
 	    });
 
 	    goal.send();
 	}
-
 
 	// Updates the interface to reflect the current state of Rosie's arms
 	function updateInterface(left, right) {
@@ -89,60 +93,56 @@ $.get('/get_websocket_url', function(data, status) {
 	    var TightCb = document.querySelector('#tightCb');
 
 	    if(left === "Tucked" && right === "Tucked") {
+			PointBtn.innerHTML = "Untuck to Point"
+			disableBtn(PointBtn);
+			TightCb.disabled = true;
 
-		PointBtn.innerHTML = "Untuck to Point"
-		disableBtn(PointBtn);
-		TightCb.disabled = true;
+			ToggleBtn.innerHTML = "Untuck";
+			enableBtn(ToggleBtn);
 
-		ToggleBtn.innerHTML = "Untuck";
-		enableBtn(ToggleBtn);
-
-		ArmsTucked = true;
+			ArmsTucked = true;
 
 	    } else if(left === "Pointed" || right === "Pointed") {
+			TightCb.disabled = false;
 
-		TightCb.disabled = false;
+			if(TightCb.checked) {
+			    PointBtn.innerHTML = "Point Arms Tight"
+			    enableBtn(PointBtn);
+			} else {
+			    PointBtn.innerHTML = "Pointed Arms Normal"
+			    disableBtn(PointBtn);
+			}
 
-		if(TightCb.checked) {
-		    PointBtn.innerHTML = "Point Arms Tight"
-		    enableBtn(PointBtn);
-		} else {
-		    PointBtn.innerHTML = "Pointed Arms Normal"
-		    disableBtn(PointBtn);
-		}
-
-		enableBtn(ToggleBtn);
+			enableBtn(ToggleBtn);
 
 	    } else if(left === "Pointed-Tight" || right === "Pointed-Tight") {
+			TightCb.disabled = false;
 
-		TightCb.disabled = false;
+			if(TightCb.checked) {
+			    PointBtn.innerHTML = "Pointed Arms Tight"
+			    disableBtn(PointBtn);
+			} else {
+			    PointBtn.innerHTML = "Point Arms Normal"
+			    enableBtn(PointBtn);
+			}
 
-		if(TightCb.checked) {
-		    PointBtn.innerHTML = "Pointed Arms Tight"
-		    disableBtn(PointBtn);
-		} else {
-		    PointBtn.innerHTML = "Point Arms Normal"
-		    enableBtn(PointBtn);
-		}
-
-		enableBtn(ToggleBtn);
+			enableBtn(ToggleBtn);
 
 	    } else { //if(left === "Untucked" || right === "Untucked") {
+			ToggleBtn.innerHTML = "Tuck";
+			enableBtn(ToggleBtn);
 
-		ToggleBtn.innerHTML = "Tuck";
-		enableBtn(ToggleBtn);
+			PointBtn.innerHTML = "Point"
+			enableBtn(PointBtn);
+			TightCb.disabled = false;
 
-		PointBtn.innerHTML = "Point"
-		enableBtn(PointBtn);
-		TightCb.disabled = false;
+			if(TightCb.checked) {
+			    PointBtn.innerHTML = "Point Arms Tight"
+			} else {
+			    PointBtn.innerHTML = "Point Arms Normal"
+			}
 
-		if(TightCb.checked) {
-		    PointBtn.innerHTML = "Point Arms Tight"
-		} else {
-		    PointBtn.innerHTML = "Point Arms Normal"
-		}
-
-		ArmsTucked = false;
+			ArmsTucked = false;
 	    }
 	}
 
@@ -157,12 +157,12 @@ $.get('/get_websocket_url', function(data, status) {
 
 
 	function handleKey(keyCode, keyDown) {
-      var down = 0;
-      if (keyDown) {
-      	down = 1;
-      }
-      // check which key was pressed
-      switch (keyCode) {
+      	var down = 0;
+      	if (keyDown) {
+      		down = 1;
+      	}
+      	// check which key was pressed
+      	switch (keyCode) {
 	        case 81: //Q key : turn left
 	          	if (z != down) {
 	          		z = down;
@@ -231,7 +231,7 @@ $.get('/get_websocket_url', function(data, status) {
 	          		if (point_vert_angle > Math.PI / 6) {
 	            		point_vert_angle = Math.PI / 6;
 	          		}
-	          		newLookGoal();
+	          		newLookGoal(point_hor_angle, point_vert_angle);
 	          	}
 	          	break;
 	        case 74: //J key : look left
@@ -240,7 +240,7 @@ $.get('/get_websocket_url', function(data, status) {
 	          		if (point_hor_angle > Math.PI * 0.75) {
 	            		point_hor_angle = Math.PI * 0.75;
 	          		}
-	          		newLookGoal();
+	          		newLookGoal(point_hor_angle, point_vert_angle);
 	          	}
 	          	break;
 	        case 75: //K key : look down
@@ -249,7 +249,7 @@ $.get('/get_websocket_url', function(data, status) {
 	          		if (point_vert_angle < -Math.PI / 3) {
 	            		point_vert_angle = -Math.PI / 3;
 	          		}
-	          		newLookGoal();
+	          		newLookGoal(point_hor_angle, point_vert_angle);
 	          	}
 	          	break;
 	        case 76: //L key : look right
@@ -258,10 +258,10 @@ $.get('/get_websocket_url', function(data, status) {
 	          		if (point_hor_angle < -Math.PI * 0.75) {
 	            		point_hor_angle = -Math.PI * 0.75;
 	          		}
-	          		newLookGoal();
+	          		newLookGoal(point_hor_angle, point_vert_angle);
 	          	}
 	          	break;
-        }
+   		}
 	}
 
 	function newMoveGoal() {
@@ -279,25 +279,12 @@ $.get('/get_websocket_url', function(data, status) {
 	        	z : z
 	      	}
 	    });
-	    var cmdVel = new ROSLIB.Topic({
-		    ros : ros,
-		    name : '/base_controller/command',
-		    messageType : 'geometry_msgs/Twist'
-		});
-	    cmdVel.publish(twist);
-
-	    this.emit('change', twist);
+	    movement_controller.publish(twist);
 	}
 
-	function newLookGoal() {
-		console.log(point_hor_angle + ", " + point_vert_angle);
+	function newLookGoal(hor_angle, vert_angle) {
+		console.log(hor_angle + ", " + vert_angle);
 		
-		var head_controller = new ROSLIB.ActionClient({
-		    ros : ros,
-		    serverName : '/head_traj_controller/point_head_action',
-		    actionName : 'pr2_controllers_msgs::PointHeadGoal' 
-		});
-
 		var head_goal = new ROSLIB.Goal({
 	      	actionClient : head_controller,
 	      	goalMessage : {
@@ -306,12 +293,17 @@ $.get('/get_websocket_url', function(data, status) {
 	            		frame_id : 'base_link'
 	          		},
 	          		point : {
-	            		x : (10 * Math.cos(point_hor_angle)),
-	            		y : (10 * Math.sin(point_hor_angle)),
-	            		z : (10 * Math.sin(point_vert_angle))
+	            		x : (10 * Math.cos(hor_angle)),
+	            		y : (10 * Math.sin(hor_angle)),
+	            		z : (10 * Math.sin(vert_angle))
 	          		}
 	        	},
 	        	pointing_frame : "high_def_frame",
+	        	pointing_axis : {
+	        		x : 1,
+	        		y : 0,
+	        		z : 0,
+	        	},
 	        	min_duration : '0.5',
 	        	max_velocity : 1.0
 	     	}
@@ -350,22 +342,9 @@ $.get('/get_websocket_url', function(data, status) {
 		topic : '/wide_stereo/left/image_color'
 	    });
 
-
-	    // Initialize the driving teleop.
-	    var teleop = new KEYBOARDTELEOP.Teleop({
-		ros : ros,
-		topic : '/base_controller/command'
-	    });
-
 	    updateArmState();
 
-	    var body = document.getElementsByTagName('body')[0];
-		body.addEventListener('keydown', function(e) {
-		  	handleKey(e.keyCode, true);
-		}, false);
-		body.addEventListener('keyup', function(e) {
-		  	handleKey(e.keyCode, false);
-		}, false);
+	    assignEventHandlers();
 	}
 
 	window.onload = init;
@@ -463,5 +442,74 @@ $.get('/get_websocket_url', function(data, status) {
 	    });
 
 	    goal.send();
+	}
+
+	function assignEventHandlers() {
+	    // Keyboard movement and looking
+	    var body = document.getElementsByTagName('body')[0];
+		body.addEventListener('keydown', function(e) {
+		  	handleKey(e.keyCode, true);
+		}, false);
+		body.addEventListener('keyup', function(e) {
+		  	handleKey(e.keyCode, false);
+		}, false);
+
+		//Getting around
+		document.getElementById("MoveForward").addEventListener('mousedown', function(e) {
+		    handleKey(87, true);
+		}, false);
+		document.getElementById("MoveForward").addEventListener('mouseup', function(e) {
+		    handleKey(87, false);
+		}, false);
+
+		document.getElementById("MoveBack").addEventListener('mousedown', function(e) {
+		    handleKey(83, true);
+		}, false);
+		document.getElementById("MoveBack").addEventListener('mouseup', function(e) {
+		    handleKey(83, false);
+		}, false);
+
+		document.getElementById("MoveLeft").addEventListener('mousedown', function(e) {
+		    handleKey(65, true);
+		}, false);
+		document.getElementById("MoveLeft").addEventListener('mouseup', function(e) {
+		    handleKey(65, false);
+		}, false);
+
+		document.getElementById("MoveRight").addEventListener('mousedown', function(e) {
+		    handleKey(68, true);
+		}, false);
+		document.getElementById("MoveRight").addEventListener('mouseup', function(e) {
+		    handleKey(68, false);
+		}, false);
+
+		// Looking around
+		document.getElementById("LookUp").addEventListener('mousedown', function(e) {
+		    handleKey(73, true);
+		}, false);
+		document.getElementById("LookUp").addEventListener('mouseup', function(e) {
+		    handleKey(73, false);
+		}, false);
+
+		document.getElementById("LookDown").addEventListener('mousedown', function(e) {
+		    handleKey(75, true);
+		}, false);
+		document.getElementById("LookDown").addEventListener('mouseup', function(e) {
+		    handleKey(75, false);
+		}, false);
+
+		document.getElementById("LookLeft").addEventListener('mousedown', function(e) {
+		    handleKey(74, true);
+		}, false);
+		document.getElementById("LookLeft").addEventListener('mouseup', function(e) {
+		    handleKey(74, false);
+		}, false);
+
+		document.getElementById("LookRight").addEventListener('mousedown', function(e) {
+		    handleKey(76, true);
+		}, false);
+		document.getElementById("LookRight").addEventListener('mouseup', function(e) {
+		    handleKey(76, false);
+		}, false);
 	}
 });
