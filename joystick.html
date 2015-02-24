@@ -1,13 +1,82 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8"/>
-    <link rel="stylesheet" type="text/css" href="./joystick.css">
-    <script type="text/javascript" src="./joystick.js"></script>
-  </head>
+   <head>
+      <meta charset="utf-8"></meta>
+      <title> Limit Stick-Travel Demo with Stationary Base </title>
+   </head>
+   <body>
+      <div id="help" style="position:fixed; left:40%; top:4%; color:grey;">
+         virtualjoystick.js Limit Stick-Travel Demo with Stationary Base
+      </div>
 
-  <body>
-    
-  </body>
+      <div id="debug1" style="position:fixed; left:5%; top:4%; color:grey;">
+         Debug Info 
+      </div>
 
+      <div id="debug2" style="position:fixed; left:5%; top:8%; color:grey;">
+         Debug Info 
+      </div>
+
+      <div id="debug3" style="position:fixed; left:5%; top:12%; color:grey;">
+         Debug Info 
+      </div>
+
+      <div id="debug4" style="position:fixed; left:5%; top:16%; color:grey;">
+         Debug Info 
+      </div>
+
+      <script src="./virtualjoystick.js-master/virtualjoystick.js"></script>
+      <script>
+console.log("touchscreen is", VirtualJoystick.touchScreenAvailable() ? "available" : "not available");
+
+var width = window.innerWidth;
+var height = window.innerHeight;
+
+var joystick1 = new VirtualJoystick({
+                     mouseSupport: true,
+                     stationaryBase: true,
+                     strokeStyle : 'grey',
+                     baseX: 0.2*width,
+                     baseY: 0.8*height,
+                     limitStickTravel: true,
+                     stickRadius: 50
+                  });
+joystick1.addEventListener('touchStartValidation', function(event){
+    var touch = event.changedTouches[0];
+    if( touch.pageX < window.innerWidth/2 ) return false;
+    return true
+});
+
+var joystick2 = new VirtualJoystick({
+                     mouseSupport: true,
+                     stationaryBase: true,
+                     strokeStyle : 'grey',
+                     baseX: 0.8*width,
+                     baseY: 0.8*height,
+                     limitStickTravel: true,
+                     stickRadius: 50
+                  });
+joystick2.addEventListener('touchStartValidation', function(event){
+    var touch = event.changedTouches[0];
+    if( touch.pageX >= window.innerWidth/2 )  return false;
+    return true
+});
+
+var debugText1 = document.getElementById("debug1");
+var debugText2 = document.getElementById("debug2");
+var debugText3 = document.getElementById("debug3");
+var debugText4 = document.getElementById("debug4");
+
+setInterval(animate, 50);
+
+function animate(){
+   debugText1.innerHTML = "Joystick X: " + joystick1.deltaX();
+   debugText2.innerHTML = "Joystick Y: " + joystick1.deltaY();
+   debugText3.innerHTML = "Joystick X: " + joystick2.deltaX();
+   debugText4.innerHTML = "Joystick Y: " + joystick2.deltaY();
+   
+}
+      </script>     
+   </body>
 </html>
+
