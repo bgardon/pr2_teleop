@@ -1,0 +1,30 @@
+h1, #result {
+    text-align: center;
+}
+
+#joystick-left {
+    float: left;
+}
+
+#joystick-right {
+    float: right;
+}
+
+.joysitck-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border: solid, black;
+
+    overflow    : hidden;
+    padding     : 0;
+    margin      : 0;
+    -webkit-user-select : none;
+    -moz-user-select    : none;
+}
+
+body {
+            overflow    : hidden;
+            padding     : 0;
+            margin      : 0;
+            background-color: #BBB;
