@@ -227,7 +227,7 @@ $.get('/get_websocket_url', function(data, status) {
 	        //Keys for head movement
 	        case 73: //I key : look up
 	          	if (keyDown) {
-	          		point_vert_angle += (Math.PI / 36);
+	          		point_vert_angle += (Math.PI / 72);
 	          		if (point_vert_angle > Math.PI / 6) {
 	            		point_vert_angle = Math.PI / 6;
 	          		}
@@ -236,7 +236,7 @@ $.get('/get_websocket_url', function(data, status) {
 	          	break;
 	        case 74: //J key : look left
 	          	if (keyDown) {
-	          		point_hor_angle += (Math.PI / 36);
+	          		point_hor_angle += (Math.PI / 72);
 	          		if (point_hor_angle > Math.PI * 0.75) {
 	            		point_hor_angle = Math.PI * 0.75;
 	          		}
@@ -245,7 +245,7 @@ $.get('/get_websocket_url', function(data, status) {
 	          	break;
 	        case 75: //K key : look down
 	         	if (keyDown) {
-	         		point_vert_angle -= (Math.PI / 36);
+	         		point_vert_angle -= (Math.PI / 72);
 	          		if (point_vert_angle < -Math.PI / 3) {
 	            		point_vert_angle = -Math.PI / 3;
 	          		}
@@ -254,7 +254,7 @@ $.get('/get_websocket_url', function(data, status) {
 	          	break;
 	        case 76: //L key : look right
 	          	if (keyDown) {
-	          		point_hor_angle -= (Math.PI / 36);
+	          		point_hor_angle -= (Math.PI / 72);
 	          		if (point_hor_angle < -Math.PI * 0.75) {
 	            		point_hor_angle = -Math.PI * 0.75;
 	          		}
@@ -274,13 +274,15 @@ $.get('/get_websocket_url', function(data, status) {
 	        	z : z
 	      	},
 	      	linear : {
-	        	x : x,
-	        	y : y,
+	        	x : x / 2,
+	        	y : y / 2,
 	        	z : z
 	      	}
 	    });
 	    movement_controller.publish(twist);
 	}
+
+	setInterval(newMoveGoal, 50);
 
 	function newLookGoal(hor_angle, vert_angle) {
 		console.log(hor_angle + ", " + vert_angle);
@@ -312,27 +314,122 @@ $.get('/get_websocket_url', function(data, status) {
 	    head_goal.send();
 	}
 
+	function initJoysticks() {
+		var width = window.innerWidth;
+		var height = window.innerHeight;
+
+		var joystick1 = new VirtualJoystick({
+		                     mouseSupport: true,
+		                     stationaryBase: true,
+		                     strokeStyle : 'grey',
+		                     baseX: 0.2*width,
+		                     baseY: 0.8*height,
+		                     limitStickTravel: true,
+		                     stickRadius: 50
+		                  });
+		joystick1.addEventListener('touchStartValidation', function(event){
+		    var touch = event.changedTouches[0];
+		    if( touch.pageX < window.innerWidth/2 ) {
+		    	return false;
+		    }
+		    return true
+		});
+
+		var joystick2 = new VirtualJoystick({
+		                     mouseSupport: true,
+		                     stationaryBase: true,
+		                     strokeStyle : 'grey',
+		                     baseX: 0.8*width,
+		                     baseY: 0.8*height,
+		                     limitStickTravel: true,
+		                     stickRadius: 50
+		                  });
+		joystick2.addEventListener('touchStartValidation', function(event){
+		    var touch = event.changedTouches[0];
+		    if( touch.pageX >= window.innerWidth/2 ) {
+		    	return false;
+		    }
+		    return true
+		});
+
+		var debugText1 = document.getElementById("debug1");
+		var debugText2 = document.getElementById("debug2");
+		var debugText3 = document.getElementById("debug3");
+		var debugText4 = document.getElementById("debug4");
+
+		setInterval(control_robot, 50);
+
+		function control_robot(){
+		    debugText1.innerHTML = "Joystick X: " + joystick1.deltaX();
+		    debugText2.innerHTML = "Joystick Y: " + joystick1.deltaY();
+		    debugText3.innerHTML = "Joystick X: " + joystick2.deltaX();
+		    debugText4.innerHTML = "Joystick Y: " + joystick2.deltaY();
+		    if(joystick1.up()) {
+		    	console.log("JS1: up");
+		    	x = 1;
+		    } else {
+		    	x = 0;
+		    }
+		    if(joystick1.left()) {
+		    	console.log("JS1: left");
+		    	y = 1;
+		    } else {
+		    	y = 0;
+		    }
+		    if(joystick1.down()) {
+		    	console.log("JS1: down");
+		    	x = -1;
+		    } else {
+		    	x = 0;
+		    }
+		    if(joystick1.right()) {
+		    	console.log("JS1: right");
+		    	y = -1;
+		    } else {
+		    	y = 0;
+		    }
+		    if(joystick2.up()) {
+		    	console.log("JS2: up");
+		    }
+		    if(joystick2.left()) {
+		    	console.log("JS2: left");
+		    }
+		    if(joystick2.down()) {
+		    	console.log("JS2: down");
+		    }
+		    if(joystick2.right()) {
+		    	console.log("JS2: right");
+		    }
+		}
+	}
+
 	// Start the camera feeds
 	function init() {
 	    var parser = document.createElement('a');
 	    parser.href = websocket_url;
 	    var hostname  = parser.hostname;
 
-	    var viewer_right = new MJPEGCANVAS.Viewer({
-		divID : 'mjpeg_right',
-		host : hostname,
-		width : 320,
-		height : 240,
-		topic : '/r_forearm_cam/image_color'
-	    });
+	    console.log("touchscreen is", VirtualJoystick.touchScreenAvailable() ? "available" : "not available");
 
-	    var viewer_left = new MJPEGCANVAS.Viewer({
-		divID : 'mjpeg_left',
-		host : hostname,
-		width : 320,
-		height : 240,
-		topic : '/l_forearm_cam/image_color'
-	    });
+	    //if (VirtualJoystick.touchScreenAvailable()) {
+	    	initJoysticks();
+	    //} else {
+		    var viewer_right = new MJPEGCANVAS.Viewer({
+			divID : 'mjpeg_right',
+			host : hostname,
+			width : 320,
+			height : 240,
+			topic : '/r_forearm_cam/image_color'
+		    });
+
+		    var viewer_left = new MJPEGCANVAS.Viewer({
+			divID : 'mjpeg_left',
+			host : hostname,
+			width : 320,
+			height : 240,
+			topic : '/l_forearm_cam/image_color'
+		    });
+		//}
 
 	    var viewer_main = new MJPEGCANVAS.Viewer({
 		divID : 'mjpeg_main',
