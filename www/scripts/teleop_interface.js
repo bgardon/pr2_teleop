@@ -46,11 +46,11 @@ $.get('/get_websocket_url', function(data, status) {
 	    actionName : 'pr2_controllers_msgs/PointHeadAction' 
 	});
 
-	var movement_controller = new ROSLIB.Topic({
-    	ros : ros,
-    	name : '/base_controller/command',
-    	messageType : 'geometry_msgs/Twist'
-  	});
+	// var movement_controller = new ROSLIB.Topic({
+ //    	ros : ros,
+ //    	name : '/base_controller/command',
+ //    	messageType : 'geometry_msgs/Twist'
+ //  	});
 
 	// Disables a polymer button
 	function disableBtn(btn) {
@@ -264,25 +264,25 @@ $.get('/get_websocket_url', function(data, status) {
    		}
 	}
 
-	function newMoveGoal() {
-		console.log(x + ", " + y + ", " + z);
-		// publish a movement command
-	    var twist = new ROSLIB.Message({
-	      	angular : {
-	        	x : 0,
-	        	y : 0,
-	        	z : z
-	      	},
-	      	linear : {
-	        	x : x / 2,
-	        	y : y / 2,
-	        	z : z
-	      	}
-	    });
-	    movement_controller.publish(twist);
-	}
+	// function newMoveGoal() {
+	// 	console.log(x + ", " + y + ", " + z);
+	// 	// publish a movement command
+	//     var twist = new ROSLIB.Message({
+	//       	angular : {
+	//         	x : 0,
+	//         	y : 0,
+	//         	z : z
+	//       	},
+	//       	linear : {
+	//         	x : x / 2,
+	//         	y : y / 2,
+	//         	z : z
+	//       	}
+	//     });
+	//     movement_controller.publish(twist);
+	// }
 
-	setInterval(newMoveGoal, 50);
+	// setInterval(newMoveGoal, 50);
 
 	function newLookGoal(hor_angle, vert_angle) {
 		console.log(hor_angle + ", " + vert_angle);
