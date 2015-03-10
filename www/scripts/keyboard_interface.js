@@ -1,5 +1,5 @@
 var KeyboardInterface = (function (baseController, headController) {
-
+  
 	var baseController_ = baseController;
   var headController_ = headController;
 
@@ -50,16 +50,24 @@ var KeyboardInterface = (function (baseController, headController) {
 
       //Keys for head movement
       case 73: //I key : look up
-        keyDown ? headController_.LookUp() : ;
+        if (keyDown) {
+          headController_.LookUp();
+        }
         break;
       case 74: //J key : look left
-        keyDown ? headController_.LookLeft() : ;
+        if (keyDown) {
+          headController_.LookLeft();
+        }
         break;
       case 75: //K key : look down
-        keyDown ? headController_.LookDown() : ;
+        if (keyDown) {
+          headController_.LookDown();
+        }
         break;
       case 76: //L key : look right
-        keyDown ? headController_.LookRight() : ;
+        if (keyDown) {
+          headController_.LookRight();
+        }
         break;
     }
   }

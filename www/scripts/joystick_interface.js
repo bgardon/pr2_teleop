@@ -45,7 +45,7 @@ var JoystickInterface = (function (baseController, headController) {
         }
         return true
     });
-    setInterval(control_robot, 50);
+    setInterval(ControlRobot, 50);
 	};
 
   var ControlRobot = function () {

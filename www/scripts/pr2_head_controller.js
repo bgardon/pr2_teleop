@@ -1,10 +1,6 @@
-var PR2HeadController = (function (opts) {
-	
-  var actionClient_ = new ROSLIB.ActionClient({
-    ros : opts.ros,
-    serverName : '/head_traj_controller/point_head_action',
-    actionName : 'pr2_controllers_msgs/PointHeadAction'
-  });
+var PR2HeadController = (function (actionClient) {
+
+  var actionClient_ = actionClient;
 
 	var horAngle_ = 0;
   var vertAngle_ = 0;
@@ -40,6 +36,7 @@ var PR2HeadController = (function (opts) {
 	var PR2HeadController = function () {
 	};
 
+
 	PR2HeadController.prototype = {
 		constructor: PR2HeadController,
 		//Command the robot to look in an arbitrary direction
@@ -48,6 +45,7 @@ var PR2HeadController = (function (opts) {
       horAngle_ = horAngle < (-Math.PI * 0.75) ? (-Math.PI * 0.75) : horAngle;
       vertAngle_ = vertAngle < (-Math.PI / 3) ? (-Math.PI / 3) : vertAngle;
       vertAngle_ = vertAngle > (Math.PI / 6) ? (Math.PI / 6) : vertAngle;
+      newLookGoal();
 		},
 
     LookUp: function () {
@@ -68,6 +66,5 @@ var PR2HeadController = (function (opts) {
     },
 
 	};
-
 	return PR2HeadController;
 })();

@@ -1,6 +1,6 @@
-var PR2BaseController = (function (opts) {
+var PR2BaseController = (function (ros) {
 	var topic_ = new ROSLIB.Topic({
-    	ros : opts.ros,
+    	ros : ros,
     	name : '/base_controller/command',
     	messageType : 'geometry_msgs/Twist'
   	});
@@ -25,7 +25,7 @@ var PR2BaseController = (function (opts) {
 	    topic_.publish(twist);
 	}
 
-	setInterval(newMoveGoal_, 50);
+	//setInterval(newMoveGoal_, 50);
 
   	var PR2BaseController = function () {
   	};
