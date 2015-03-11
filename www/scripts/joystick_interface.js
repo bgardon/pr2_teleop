@@ -54,13 +54,22 @@ var JoystickInterface = (function () {
 	};
 
   var ControlRobot = function () {
-        joystick1_.up() ? baseController_.MoveForward() : 
-          (joystick1_.down() ? baseController_.MoveBackward() :
-            baseController_.StopFrontBack());
+        if (joystick1_.up()) {
+          baseController_.MoveForward();
+          console.log("joy-up");
+        } else if (joystick1_.down()) {
+          baseController_.MoveBackward();
+        } else {
+          baseController_.StopFrontBack();
+        }
 
-        joystick1_.left() ? baseController_.MoveLeft() : 
-          (joystick1_.right() ? baseController_.MoveRight() :
-            baseController_.StopLeftRight());
+        if (joystick1_.left()) {
+          baseController_.MoveLeft();
+        } else if (joystick1_.right()) {
+          baseController_.MoveRight();
+        } else {
+          baseController_.StopLeftRight();
+        }
 
         
         if(joystick2_.up()) {

@@ -24,6 +24,7 @@ var KeyboardInterface = (function (baseController, headController) {
         keyDown ? baseController_.TurnLeft() : baseController_.StopTurn();
         break;
       case 87: //W key : up
+      console.log("W");
         keyDown ? baseController_.MoveForward() : baseController_.StopFrontBack();
         break;
       case 38: //up arrow : up
