@@ -146,8 +146,10 @@ $.get('/get_websocket_url', function(data, status) {
 	    console.log("touchscreen is", VirtualJoystick.touchScreenAvailable() ? "available" : "not available");
 
 	    var baseController = new PR2BaseController(ros);
-	    console.log(PR2HeadController);
+	    //console.log(PR2BaseController);
+	    console.log("BC: " + baseController);
 	    var headController = new PR2HeadController(head_action_client);
+	    //console.log(PR2HeadController);
 
 	    var viewer_main = new MJPEGCANVAS.Viewer({
 		divID : 'mjpeg_main',

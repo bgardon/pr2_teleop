@@ -1,11 +1,11 @@
-var PR2HeadController = (function (actionClient) {
+var PR2HeadController = (function () {
 
-  var actionClient_ = actionClient;
+  var actionClient_;
 
 	var horAngle_ = 0;
   var vertAngle_ = 0;
 
-	function newLookGoal() {
+	function NewLookGoal() {
     var head_goal = new ROSLIB.Goal({
       actionClient : actionClient_,
       goalMessage : {
@@ -33,20 +33,23 @@ var PR2HeadController = (function (actionClient) {
     head_goal.send();
   }
 
-	var PR2HeadController = function () {
+	var PR2HeadController = function (actionClient) {
+    actionClient_ = actionClient;
 	};
+
+  function Look (horAngle, vertAngle) {
+    horAngle_ = horAngle > (Math.PI * 0.75) ? (Math.PI * 0.75) : horAngle;
+    horAngle_ = horAngle < (-Math.PI * 0.75) ? (-Math.PI * 0.75) : horAngle;
+    vertAngle_ = vertAngle < (-Math.PI / 3) ? (-Math.PI / 3) : vertAngle;
+    vertAngle_ = vertAngle > (Math.PI / 6) ? (Math.PI / 6) : vertAngle;
+    NewLookGoal();
+  }
 
 
 	PR2HeadController.prototype = {
 		constructor: PR2HeadController,
 		//Command the robot to look in an arbitrary direction
-		Look: function (horAngle, vertAngle) {
-			horAngle_ = horAngle > (Math.PI * 0.75) ? (Math.PI * 0.75) : horAngle;
-      horAngle_ = horAngle < (-Math.PI * 0.75) ? (-Math.PI * 0.75) : horAngle;
-      vertAngle_ = vertAngle < (-Math.PI / 3) ? (-Math.PI / 3) : vertAngle;
-      vertAngle_ = vertAngle > (Math.PI / 6) ? (Math.PI / 6) : vertAngle;
-      newLookGoal();
-		},
+		Look: Look,
 
     LookUp: function () {
       Look(horAngle_, vertAngle_ + (Math.PI / 72));

@@ -1,9 +1,12 @@
 var KeyboardInterface = (function (baseController, headController) {
   
-	var baseController_ = baseController;
-  var headController_ = headController;
+	var baseController_;
+  var headController_;
 
-	var KeyboardInterface = function () {
+	var KeyboardInterface = function (baseController, headController) {
+    baseController_ = baseController;
+    headController_ = headController;
+
     var body = document.getElementsByTagName('body')[0];
     
     body.addEventListener('keydown', function(e) {

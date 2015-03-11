@@ -1,14 +1,19 @@
-var JoystickInterface = (function (baseController, headController) {
+var JoystickInterface = (function () {
 
-	var baseController_ = baseController;
-  var headController_ = headController;
+	var baseController_;
+  var headController_;
 
   var joystick1_;
   var joystick2_;
 
   var headLocked_ = false;
 
-	var JoystickInterface = function () {
+	var JoystickInterface = function (baseController, headController) {
+    baseController_ = baseController;
+    headController_ = headController;
+
+    console.log(baseController_);
+
     var width = window.innerWidth;
     var height = window.innerHeight;
 
